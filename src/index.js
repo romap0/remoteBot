@@ -1,12 +1,14 @@
 const Telegraf = require('telegraf');
+const SocksProxyAgent = require('socks-proxy-agent');
 const os = require('os');
 const { exec } = require('child_process');
 
-const { BOT_TOKEN, CHATS } = process.env;
+const { BOT_TOKEN, CHATS, PROXY } = process.env;
 
 const chats = CHATS.split(',');
+const agent = new SocksProxyAgent(PROXY);
 
-const bot = new Telegraf(BOT_TOKEN);
+const bot = new Telegraf(BOT_TOKEN, { telegram: { agent } });
 
 bot.command('/ip', (ctx) => {
   const ips = Object.values(os.networkInterfaces())
